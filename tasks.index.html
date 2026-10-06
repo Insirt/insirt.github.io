@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jai Yen Tasks</title>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f6f7f9;
+    }
+
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    #status {
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Jai Yen</h1>
+
+  <div class="card">
+    <h2>Vikunja</h2>
+
+    <p id="status">Connecting...</p>
+
+    <button onclick="connect()">
+      Refresh
+    </button>
+  </div>
+
+
+  <div class="card">
+    <h2>Tasks</h2>
+
+    <p>
+      Authentication isn't connected yet.
+    </p>
+
+    <div id="tasks">
+      Once authentication is added, your Vikunja tasks
+      will appear here.
+    </div>
+  </div>
+
+
+  <div class="card">
+    <h2>Quick Capture</h2>
+
+    <input
+      id="new-task"
+      type="text"
+      placeholder="What do you need to remember?"
+    >
+
+    <button onclick="captureTest()">
+      Add Task
+    </button>
+
+    <p id="capture-result"></p>
+  </div>
+
+
+<script>
+
+const VIKUNJA = "https://tasks.gigdrasil.com";
+
+
+async function connect() {
+
+  const status = document.getElementById("status");
+
+  status.textContent = "Connecting...";
+
+  try {
+
+    const response = await fetch(
+      VIKUNJA + "/api/v1/info"
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "HTTP " + response.status
+      );
+    }
+
+    const data = await response.json();
+
+    status.textContent =
+      "Connected to Vikunja " + data.version + " ✓";
+
+  }
+
+  catch (error) {
+
+    status.textContent =
+      "Connection failed: " + error;
+
+  }
+}
+
+
+function captureTest() {
+
+  const input =
+    document.getElementById("new-task");
+
+  const result =
+    document.getElementById("capture-result");
+
+  if (!input.value.trim()) {
+
+    result.textContent =
+      "Type something first.";
+
+    return;
+  }
+
+  /*
+   * We deliberately DON'T send this anywhere yet.
+   *
+   * This verifies that the NMCI browser allows
+   * the actual Jai Yen client UI to accept input.
+   */
+
+  result.textContent =
+    'Captured locally: "' +
+    input.value +
+    '"';
+
+}
+
+
+connect();
+
+</script>
+
+</body>
+</html>
