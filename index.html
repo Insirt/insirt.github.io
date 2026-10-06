@@ -37,6 +37,37 @@
   </button>
 
   <p id="result"></p>
+<hr>
 
+<h2>Vikunja Connectivity Test</h2>
+
+<button onclick="testVikunja()">
+  Test Vikunja Connection
+</button>
+
+<pre id="vikunja-result">Not tested yet.</pre>
+
+<script>
+async function testVikunja() {
+  const output = document.getElementById("vikunja-result");
+
+  output.textContent = "Testing...";
+
+  try {
+    const response = await fetch(
+      "https://vikunja.gigdrasil.com/api/v1/info"
+    );
+
+    output.textContent =
+      "SUCCESS\n" +
+      "HTTP status: " + response.status + "\n\n" +
+      await response.text();
+
+  } catch (error) {
+    output.textContent =
+      "FAILED\n\n" + error.toString();
+  }
+}
+</script>
 </body>
 </html>
